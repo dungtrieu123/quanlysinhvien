@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.servlet.ModelAndView;
 
 import com.example.quanlysinhvien.entity.Student;
 import com.example.quanlysinhvien.service.StudentService;
@@ -72,5 +72,9 @@ public class StudentController {
 
 
         studentService.delete(id);
+    }
+    @GetMapping("/view") 
+    public ModelAndView showStudentPage() {
+        return new ModelAndView("students"); // Trỏ tới file students.html trong templates
     }
 }
