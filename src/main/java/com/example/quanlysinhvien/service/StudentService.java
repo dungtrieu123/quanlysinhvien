@@ -33,8 +33,8 @@ public class StudentService {
             return studentRepository.findAll();
         }
         String value = keyword.trim();
-        return studentRepository.findByStudentCodeContainingIgnoreCaseOrFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingIgnoreCase(
-                value, value, value, value);
+        return studentRepository.findByStudentCodeContainingIgnoreCaseOrFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingIgnoreCaseOrClassNameContainingIgnoreCase(
+            value, value, value, value, value);
     }
 
 

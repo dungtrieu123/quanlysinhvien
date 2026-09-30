@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0d6efd">
+    <title>Quản lý sinh viên</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/admin-lte-v4.9.1/dist/css/adminlte.css">
+    <style>
+        :root { --app-accent: #0d6efd; }
+        body { min-height: 100vh; }
+        .app-sidebar { --lte-sidebar-width: 260px; }
+        .brand-mark { width: 2rem; height: 2rem; display: inline-grid; place-items: center; border-radius: .65rem; background: #0d6efd; color: #fff; }
+        .content-wrapper { min-height: calc(100vh - 57px); }
+        .page-heading { background: linear-gradient(120deg, #0d6efd 0%, #477df5 55%, #7459e8 100%); color: #fff; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 12px 28px rgba(13, 110, 253, .16); }
+        .page-heading p { color: rgba(255,255,255,.78); }
+        .summary-card { border: 0; border-radius: .9rem; box-shadow: 0 3px 18px rgba(33, 37, 41, .06); }
+        .summary-icon { width: 2.8rem; height: 2.8rem; display: grid; place-items: center; border-radius: .8rem; font-size: 1.25rem; }
+        .student-avatar { width: 2.35rem; height: 2.35rem; display: inline-grid; place-items: center; border-radius: 50%; color: #0d6efd; background: #e8f1ff; font-weight: 700; }
+        .table thead th { white-space: nowrap; font-size: .78rem; text-transform: uppercase; letter-spacing: .035em; color: #6c757d; }
+        .table td { vertical-align: middle; }
+        .action-buttons { white-space: nowrap; }
+        .action-buttons .btn { width: 2rem; height: 2rem; display: inline-grid; place-items: center; padding: 0; }
+        .search-box { max-width: 25rem; }
+        @media (max-width: 575.98px) {
+            .page-heading { padding: 1.2rem; }
+            .page-heading .btn { width: 100%; }
+            .search-box { max-width: none; }
+        }
+    </style>
+</head>
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+<div class="app-wrapper">
+    <nav class="app-header navbar navbar-expand bg-body shadow-sm">
+        <div class="container-fluid">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button" aria-label="Mở/đóng menu"><i class="bi bi-list"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-block"><span class="nav-link fw-semibold">Cổng quản trị</span></li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><span class="nav-link text-secondary"><i class="bi bi-shield-check me-1"></i> Quản lý đào tạo</span></li>
+            </ul>
+        </div>
+    </nav>
+
+    <aside class="app-sidebar bg-dark shadow" data-bs-theme="dark">
+        <div class="sidebar-brand">
+            <a href="/student.html" class="brand-link text-decoration-none">
+                <span class="brand-mark me-2"><i class="bi bi-mortarboard-fill"></i></span>
+                <span class="brand-text fw-semibold">Student Manager</span>
+            </a>
+        </div>
+        <div class="sidebar-wrapper">
+            <nav class="mt-2">
+                <ul class="nav sidebar-menu flex-column" role="menu">
+                    <li class="nav-header">QUẢN LÝ</li>
+                    <li class="nav-item">
+                        <a href="/student.html" class="nav-link active">
+                            <i class="nav-icon bi bi-people-fill"></i><p>Sinh viên</p>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+
+    <main class="app-main">
+        <div class="app-content-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-sm-6"><h3 class="mb-0">Quản lý sinh viên</h3></div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-end mb-0">
+                            <li class="breadcrumb-item"><a href="/student.html">Trang chủ</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Sinh viên</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-content">
+            <div class="container-fluid pb-4">
+                <section class="page-heading mb-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
+                    <div>
+                        <span class="badge text-bg-light text-primary mb-2"><i class="bi bi-stars me-1"></i> HỆ THỐNG ĐÀO TẠO</span>
+                        <h1 class="h3 fw-bold mb-1">Danh sách sinh viên</h1>
+                        <p class="mb-0">Theo dõi và cập nhật hồ sơ sinh viên một cách nhanh chóng.</p>
+                    </div>
+                    <button type="button" class="btn btn-light text-primary fw-semibold px-3" id="addStudentButton">
+                        <i class="bi bi-person-plus-fill me-1"></i> Thêm sinh viên
+                    </button>
+                </section>
+
+                <div id="pageAlert" class="alert d-none" role="alert" aria-live="polite"></div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="card summary-card h-100"><div class="card-body d-flex align-items-center gap-3">
+                            <div class="summary-icon bg-primary-subtle text-primary"><i class="bi bi-people-fill"></i></div>
+                            <div><div class="text-secondary small">Tổng sinh viên</div><div id="studentCount" class="fs-4 fw-bold">—</div></div>
+                        </div></div>
+                    </div>
+                    <div class="col-sm-6 col-xl-4">
+                        <div class="card summary-card h-100"><div class="card-body d-flex align-items-center gap-3">
+                            <div class="summary-icon bg-success-subtle text-success"><i class="bi bi-check-circle-fill"></i></div>
+                            <div><div class="text-secondary small">Trạng thái hệ thống</div><div class="fs-6 fw-semibold">Đang hoạt động</div></div>
+                        </div></div>
+                    </div>
+                    <div class="col-xl-4 d-none d-xl-block">
+                        <div class="card summary-card h-100"><div class="card-body d-flex align-items-center gap-3">
+                            <div class="summary-icon bg-warning-subtle text-warning"><i class="bi bi-lightning-charge-fill"></i></div>
+                            <div><div class="text-secondary small">Thao tác nhanh</div><div class="fs-6 fw-semibold">Thêm, sửa, xóa hồ sơ</div></div>
+                        </div></div>
+                    </div>
+                </div>
+
+                <section class="card summary-card">
+                    <div class="card-header bg-body py-3">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                            <div>
+                                <h2 class="h5 mb-1"><i class="bi bi-card-list text-primary me-2"></i>Hồ sơ sinh viên</h2>
+                                <div class="text-secondary small">Tìm theo mã, họ tên, email, số điện thoại hoặc lớp.</div>
+                            </div>
+                            <form id="searchForm" class="search-box w-100" role="search">
+                                <label for="searchInput" class="visually-hidden">Tìm sinh viên</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-body"><i class="bi bi-search text-secondary"></i></span>
+                                    <input id="searchInput" class="form-control" type="search" placeholder="Nhập thông tin cần tìm..." autocomplete="off">
+                                    <button id="clearSearchButton" class="btn btn-outline-secondary" type="button" aria-label="Xóa từ khóa tìm kiếm" title="Xóa tìm kiếm"><i class="bi bi-x-lg"></i></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Sinh viên</th>
+                                <th>Mã sinh viên</th>
+                                <th>Email</th>
+                                <th>Số điện thoại</th>
+                                <th>Lớp</th>
+                                <th class="text-center pe-4">Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody id="studentTableBody">
+                            <tr><td colspan="6" class="text-center py-5 text-secondary"><span class="spinner-border spinner-border-sm me-2" role="status"></span>Đang tải danh sách...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer bg-body text-secondary small d-flex justify-content-between">
+                        <span id="resultSummary">Đang tải dữ liệu...</span>
+                        <span><i class="bi bi-arrow-repeat me-1"></i>Dữ liệu được tải trực tiếp từ API</span>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer small text-secondary"><strong>Quản lý sinh viên</strong><span class="float-end d-none d-sm-inline">AdminLTE</span></footer>
+</div>
+
+<div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <form id="studentForm">
+                <div class="modal-header">
+                    <div><h2 class="modal-title fs-5" id="studentModalTitle">Thêm sinh viên</h2><div class="small text-secondary">Nhập đầy đủ thông tin hồ sơ bên dưới.</div></div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <input id="studentId" type="hidden">
+                    <div class="mb-3"><label for="studentCode" class="form-label">Mã sinh viên <span class="text-danger">*</span></label><input id="studentCode" name="studentCode" class="form-control" maxlength="50" required placeholder="Ví dụ: SV001"></div>
+                    <div class="mb-3"><label for="fullName" class="form-label">Họ và tên <span class="text-danger">*</span></label><input id="fullName" name="fullName" class="form-control" maxlength="150" required placeholder="Nguyễn Văn An"></div>
+                    <div class="mb-3"><label for="email" class="form-label">Email</label><input id="email" name="email" type="email" class="form-control" maxlength="150" placeholder="email@example.com"></div>
+                    <div class="row">
+                        <div class="col-sm-6 mb-3"><label for="phone" class="form-label">Số điện thoại</label><input id="phone" name="phone" type="tel" class="form-control" maxlength="30" placeholder="09xx xxx xxx"></div>
+                        <div class="col-sm-6 mb-3"><label for="className" class="form-label">Lớp</label><input id="className" name="className" class="form-control" maxlength="100" placeholder="CNTT K20"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary" id="saveStudentButton"><i class="bi bi-check-lg me-1"></i>Lưu thông tin</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="/admin-lte-v4.9.1/dist/js/adminlte.js"></script>
+<script src="/assets/js/student.js"></script>
+</body>
+</html>

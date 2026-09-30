@@ -13,9 +13,10 @@ import com.example.quanlysinhvien.entity.Student;
 public interface StudentRepository extends JpaRepository<Student, UUID> {
 
 
-    List<Student> findByStudentCodeContainingIgnoreCaseOrFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingIgnoreCase(
+        List<Student> findByStudentCodeContainingIgnoreCaseOrFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingIgnoreCaseOrClassNameContainingIgnoreCase(
             String studentCode,
             String fullName,
             String email,
-            String phone);
+            String phone,
+            String className);
 }
